@@ -46,12 +46,18 @@ def send_to_arduino(command):
 
 def calculate_card_value(card):
     """Calculate HiLo value for a card."""
-    if card in [2, 3, 4, 5, 6]:
-        return 1
-    elif card in [10, 'J', 'Q', 'K', 'A']:
+    # if card is int, card = int(card)
+    if card == 'J' or card == 'Q' or card == 'K' or card == 'A':
         return -1
+    
     else:
-        return 0
+        card = int(card)
+        if 2 <= card <= 6:
+            return 1
+        elif 7 <= card <= 9:
+            return 0
+        else:
+            return -1
 
 def get_action(player_total, dealer_card, true_count):
     """Return the action based on HiLo strategy."""
@@ -84,7 +90,7 @@ def get_bet_amount(true_count):
     else:
         return 5  # Maximum bet
 
-def detect_cards(scan_duration=10):
+def detect_cards(scan_duration=5):
     """Detect cards for a given duration and return detected player and dealer cards."""
     dealer_confidence = defaultdict(list)
     player_confidence = defaultdict(list)
@@ -154,7 +160,7 @@ def main():
         key = cv2.waitKey(1) & 0xFF
 
         if key == ord('s'):
-            print("\nStarting 10-second scan...")
+            print("\nStarting 5-second scan...")
             player_cards, dealer_cards = detect_cards()
 
             if not player_cards or not dealer_cards:
